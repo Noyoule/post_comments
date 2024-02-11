@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:post_comments/components/PostComponent.dart';
+import 'package:post_comments/components/post_component.dart';
+import 'package:post_comments/views/create_post.dart';
 
 class PostsPage extends StatefulWidget {
   const PostsPage({super.key});
@@ -22,10 +23,13 @@ class _PostsPageState extends State<PostsPage> {
                 const EdgeInsets.only(left: 10, top: 13, right: 10, bottom: 20),
             child: Row(
               children: [
-                Image.asset(
-                  'assets/images/user.png',
-                  width: 50,
-                  height: 50,
+                ClipOval(
+                  child: Image.asset(
+                    'assets/images/user.png',
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 const SizedBox(
                   width: 10,
@@ -39,10 +43,24 @@ class _PostsPageState extends State<PostsPage> {
                       ),
                       borderRadius: BorderRadius.circular(20.0),
                     ),
-                    child: const Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 7, bottom: 7),
-                        child: Text("Nouvelle publication"),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                                pageBuilder: (_, __, ___) =>
+                                    const CreatePost()));
+                      },
+                      child: const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 7, bottom: 7),
+                          child: Text(
+                            "Nouvelle publication",
+                            style: TextStyle(
+                                fontFamily: "Merriweather",
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -57,8 +75,26 @@ class _PostsPageState extends State<PostsPage> {
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
-                    PostComponent(tableauImages: [], userProfileImage: "assets/images/user.png"),
-                    PostComponent(tableauImages: [], userProfileImage: "assets/images/user.png",)
+                    PostComponent(tableauImages: [
+                      'assets/images/user.png',
+                      'assets/images/maserati-granturismo-folgore-1.jpg',
+                      'assets/images/S7-modele--toyota-c-hr.jpg',
+                      'assets/images/S7-modele--toyota-c-hr.jpg',
+                      'assets/images/S7-modele--toyota-c-hr.jpg'
+                    ], userProfileImage: "assets/images/user.png"),
+                    PostComponent(
+                      tableauImages: [
+                        'assets/images/user.png',
+                        'assets/images/maserati-granturismo-folgore-1.jpg'
+                      ],
+                      userProfileImage: "assets/images/user.png",
+                    ),
+                    PostComponent(
+                      tableauImages: [
+                        'assets/images/maserati-granturismo-folgore-1.jpg'
+                      ],
+                      userProfileImage: "assets/images/user.png",
+                    )
                   ],
                 ),
               ),
