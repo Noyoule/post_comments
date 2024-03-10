@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:post_comments/components/expandable_text.dart';
+import 'package:post_comments/components/description_component.dart';
 import 'package:post_comments/components/image_logic.dart';
 import 'package:post_comments/views/images_view.dart';
 import 'package:share/share.dart';
@@ -8,19 +8,26 @@ import 'package:share/share.dart';
 class PostComponent extends StatefulWidget {
   final List<String> tableauImages;
   final String userProfileImage;
+  final String description;
   const PostComponent(
-      {super.key, required this.tableauImages, required this.userProfileImage});
+      {super.key, required this.tableauImages, required this.userProfileImage, required this.description});
 
   @override
   State<PostComponent> createState() => _PostComponentState();
 }
 
 class _PostComponentState extends State<PostComponent> {
+  late bool hasImage;
+  @override
+  void initState() {
+    super.initState();
+    hasImage = (widget.tableauImages.isNotEmpty);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 4, bottom: 4, left: 1, right: 1),
-      padding: const EdgeInsets.all(5),
+      margin: const EdgeInsets.only(top: 4, bottom: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -68,24 +75,24 @@ class _PostComponentState extends State<PostComponent> {
               ],
             ),
           ),
+          const SizedBox(height: 3,),
           //Description
-          const Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: ExpandableText(
-                text:
-                    "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum comes from a line in section 1.10.32.The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from de Finibus Bonorum et Malorum by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham."),
-          ),
+          DescriptionComponent(
+              text: widget.description,
+              hasImage: hasImage),
           //Afficher les images
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  _customPageRoute(ImagesSlider(
-                    tableauImages: widget.tableauImages,
-                  )));
-            },
-            child: ImageLogic(tableauImages: widget.tableauImages),
-          ),
+          hasImage
+              ? GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        _customPageRoute(ImagesSlider(
+                          tableauImages: widget.tableauImages,
+                        )));
+                  },
+                  child: ImageLogic(tableauImages: widget.tableauImages),
+                )
+              : const SizedBox(),
           const SizedBox(
             height: 2,
           ),
@@ -128,7 +135,9 @@ class _PostComponentState extends State<PostComponent> {
               ),
               const Spacer(),
               InkWell(
-                onTap: ()=> Share.share('check out my website https://example.com', subject: 'Look what I made!'),
+                onTap: () => Share.share(
+                    'check out my website https://example.com',
+                    subject: 'Look what I made!'),
                 child: SvgPicture.string(
                   '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" /></svg>',
                   color: const Color.fromARGB(255, 110, 110, 110),

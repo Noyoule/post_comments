@@ -39,6 +39,8 @@ dependencies:
   share: ^2.0.4
   image_picker: ^1.0.7
   path_provider: ^2.1.2
+  google_fonts: ^6.1.0
+  flutter_material_pickers: ^3.6.0
 
 dev_dependencies:
   flutter_test:
