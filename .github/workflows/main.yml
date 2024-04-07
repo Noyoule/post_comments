@@ -1,0 +1,38 @@
+name: Test and build a new apk
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v4
+     - uses: subosito/flutter-action@v2
+       with:
+         channel: stable
+     - name: Install dependencies
+       run: flutter pub get
+     - name: Build
+       run: flutter build apk
+     - name: Test
+       run: flutter test
+     - name: Générer un fichier de rapport
+       run: echo "Contenu du rapport" > rapport.txt
+     - name: Send email to team members
+       uses: dawidd6/action-send-mail@v3
+       with:
+         server_port: 465
+         secure: true
+         server_address: smtp.gmail.com
+         username: noyoule@gmail.com
+         password: yqnl zhst ycmx fnzv
+         from: Kelebernadin00@gmail.com
+         to: officialbernadin@gmail.com,ayawaetsiam2004@gmail.com, batazi.kpaka@gmail.com , anlovibertin9@gmail.com
+         subject: "completed successfully!"
+         body: "All test has past "
+         attachments: rapport.txt
