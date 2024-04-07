@@ -2,7 +2,7 @@ name: Test and build a new apk
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     types:
       - opened
