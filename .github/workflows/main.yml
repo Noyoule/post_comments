@@ -21,8 +21,6 @@ jobs:
        run: flutter build apk
      - name: Test
        run: flutter test
-     - name: Générer un fichier de rapport
-       run: echo "Contenu du rapport" > rapport.txt
      - name: Send email to team members
        uses: dawidd6/action-send-mail@v3
        with:
@@ -32,7 +30,7 @@ jobs:
          username: noyoule@gmail.com
          password: yqnl zhst ycmx fnzv
          from: Kelebernadin00@gmail.com
-         to: officialbernadin@gmail.com,ayawaetsiam2004@gmail.com, batazi.kpaka@gmail.com , anlovibertin9@gmail.com
+         to: victoirenoyouliwa@gmail.com
          subject: "completed successfully!"
          body: "All test has past "
-         attachments: rapport.txt
+         attachments: build/app/outputs/flutter-apk/app-release.apk
