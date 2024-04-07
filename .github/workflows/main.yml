@@ -19,6 +19,10 @@ jobs:
        run: flutter pub get
      - name: Build
        run: flutter build apk
+     - uses: actions/upload-artifact@v4
+       with:
+         name: download build artifact
+         path: build/app/outputs/flutter-apk/app-release.apk
      - name: Test
        run: flutter test
      - name: Send email to team members
@@ -33,4 +37,3 @@ jobs:
          to: victoirenoyouliwa@gmail.com
          subject: "completed successfully!"
          body: "All test has past "
-         attachments: build/app/outputs/flutter-apk/app-release.apk
