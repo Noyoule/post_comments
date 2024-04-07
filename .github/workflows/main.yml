@@ -17,15 +17,18 @@ jobs:
          channel: stable
      - name: Install dependencies
        run: flutter pub get
-     - name: Build
+     - name: Test code
+       run: flutter test
+     - name: Build apk
+       if: ${{ success() }}
        run: flutter build apk
      - uses: actions/upload-artifact@v4
+       if: ${{ success() }}
        with:
          name: download build artifact
          path: build/app/outputs/flutter-apk/app-release.apk
-     - name: Test
-       run: flutter test
      - name: Send email to team members
+       if: ${{ success() }}
        uses: dawidd6/action-send-mail@v3
        with:
          server_port: 465
@@ -33,7 +36,13 @@ jobs:
          server_address: smtp.gmail.com
          username: noyoule@gmail.com
          password: yqnl zhst ycmx fnzv
-         from: Kelebernadin00@gmail.com
+         from: noyoule@gmail.com
          to: victoirenoyouliwa@gmail.com
-         subject: "completed successfully!"
-         body: "All test has past "
+         subject: "completed successfully by ${{github.actor}}"
+         body: "All test has past. A new realease has been updated at https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} go to download it"
+     - name: automerge
+       if: ${{ github.event_name == 'pull_request' }}
+       uses: "pascalgn/automerge-action@v0.16.2"
+       env:
+         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    
