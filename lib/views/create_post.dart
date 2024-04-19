@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:post_comments/components/add/change_color.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({super.key});
@@ -14,7 +16,6 @@ class CreatePost extends StatefulWidget {
 }
 
 class _CreatePostState extends State<CreatePost> {
-
   /*File? _image;
   Future getImageFromGalery() async{
     try{
@@ -45,6 +46,7 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -57,9 +59,7 @@ class _CreatePostState extends State<CreatePost> {
             margin: const EdgeInsets.only(right: 5),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+              color: Theme.of(context).primaryColor,
             ),
             child: Text(
               "Publiée",
@@ -72,11 +72,55 @@ class _CreatePostState extends State<CreatePost> {
         children: [
           Column(
             children: [
-              const Divider(height: 2,),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Container(
-                  child: Column(children: []),
+              const Divider(
+                height: 2,
+              ),
+              const Gap(10),
+              Row(
+                children: [
+                  const Gap(10),
+                  ClipOval(
+                    child: Image.asset(
+                      "assets/images/images.jpeg",
+                      height: 45,
+                      width: 45,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  const Text(
+                    "Vituixo",
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Merriweather",
+                    ),
+                  ),
+                ],
+              ),
+              const Gap(10),
+              Container(
+                height: 300,
+                color: Colors.deepOrangeAccent,
+                child: const TextField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  expands: true,
+                  textAlign: TextAlign.center,
+                  textAlignVertical: TextAlignVertical.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500),
+                  cursorColor: Colors.white,
+                  cursorHeight: 35,
+                  cursorWidth: 3,
+                  decoration: InputDecoration(
+                    hintText: 'Start typing...',
+                    hintStyle: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],
@@ -84,81 +128,93 @@ class _CreatePostState extends State<CreatePost> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 10,
-            child: Column(
-              children: [
-                const Divider(height: 2,),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 45,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.font_download_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        width: 45,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.color_lens_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        width: 45,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.image_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        width: 45,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.camera_alt_outlined,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
+            bottom: 0,
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  const Divider(
+                    height: 2,
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 45,
+                          height: 45,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.font_download_outlined,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        InkWell(
+                          onTap: (){
+                            showModalBottomSheet(context: context, builder: (context){
+                              return  const ChangeColor();
+                            });
+                          },
+                          child: Container(
+                            width: 45,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.color_lens_outlined,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Container(
+                          width: 45,
+                          height: 45,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.image_outlined,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Container(
+                          width: 45,
+                          height: 45,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.camera_alt_outlined,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
