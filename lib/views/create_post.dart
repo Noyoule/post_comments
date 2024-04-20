@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:post_comments/components/add/change_color.dart';
+import 'package:post_comments/cubit/add/color_cubit.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({super.key});
@@ -43,6 +45,21 @@ class _CreatePostState extends State<CreatePost> {
       print("Error: $e");
     }
   }*/
+
+  Color inverseColor(Color color) {
+    int inverseRed = 255 - color.red;
+    int inverseGreen = 255 - color.green;
+    int inverseBlue = 255 - color.blue;
+    if (115 <= inverseBlue &&
+        inverseBlue <= 130 &&
+        115 <= inverseGreen &&
+        inverseGreen <= 130 &&
+        115 <= inverseRed &&
+        inverseRed <= 130) {
+      return Colors.white;
+    }
+    return Color.fromARGB(color.alpha, inverseRed, inverseGreen, inverseBlue);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,28 +118,30 @@ class _CreatePostState extends State<CreatePost> {
                 ],
               ),
               const Gap(10),
-              Container(
-                height: 300,
-                color: Colors.deepOrangeAccent,
-                child: const TextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  expands: true,
-                  textAlign: TextAlign.center,
-                  textAlignVertical: TextAlignVertical.center,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500),
-                  cursorColor: Colors.white,
-                  cursorHeight: 35,
-                  cursorWidth: 3,
-                  decoration: InputDecoration(
-                    hintText: 'Start typing...',
-                    hintStyle: TextStyle(color: Colors.white),
+              BlocBuilder<ColorCubit, int>(builder: (context, state) {
+                return Container(
+                  height: 300,
+                  color: Color(state),
+                  child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    expands: true,
+                    textAlign: TextAlign.center,
+                    textAlignVertical: TextAlignVertical.center,
+                    style: TextStyle(
+                        color: inverseColor(Color(state)),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500),
+                    cursorColor: inverseColor(Color(state)),
+                    cursorHeight: 35,
+                    cursorWidth: 3,
+                    decoration: InputDecoration(
+                      hintText: 'Start typing...',
+                      hintStyle: TextStyle(color: inverseColor(Color(state))),
+                    ),
                   ),
-                ),
-              ),
+                );
+              })
             ],
           ),
           Positioned(
@@ -157,10 +176,12 @@ class _CreatePostState extends State<CreatePost> {
                         ),
                         const Spacer(),
                         InkWell(
-                          onTap: (){
-                            showModalBottomSheet(context: context, builder: (context){
-                              return  const ChangeColor();
-                            });
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return const ChangeColor();
+                                });
                           },
                           child: Container(
                             width: 45,

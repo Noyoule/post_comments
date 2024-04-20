@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:post_comments/cubit/add/color_cubit.dart';
 import 'package:post_comments/views/posts.dart';
 
 void main() {
@@ -11,7 +13,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiBlocProvider(
+        providers: [
+      BlocProvider(
+        create: (BuildContext context) => ColorCubit(),
+      ),
+    ], child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -36,44 +43,44 @@ class MyApp extends StatelessWidget {
           fontFamily: "Poppins",
         ),
         home: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            appBar: AppBar(
-              leading: const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Text(
-                  "Post",
-                  style: TextStyle(
-                    fontSize: 19,
-                    fontFamily: "Poppins",
-                    fontWeight: FontWeight.w500
+            length: 3,
+            child: Scaffold(
+              appBar: AppBar(
+                leading: const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Text(
+                    "Post",
+                    style: TextStyle(
+                        fontSize: 19,
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ),
+                actions: const [
+                  Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Icon(Icons.search)),
+                ],
+                bottom: const PreferredSize(
+                  preferredSize: Size.fromHeight(25),
+                  child: TabBar(
+                    tabs: [
+                      Tab(text: "Posts"),
+                      Tab(text: "Mes posts"),
+                      Tab(text: "Profile")
+                    ],
                   ),
                 ),
               ),
-              actions: const [
-                Padding(
-                    padding: EdgeInsets.only(right: 8),
-                    child: Icon(Icons.search)),
-              ],
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(25),
-                child: TabBar(
-                  tabs: [
-                    Tab(text: "Posts"),
-                    Tab(text: "Mes posts"),
-                    Tab(text: "Profile")
-                  ],
-                ),
+              body: const TabBarView(
+                children: [
+                  PostsPage(),
+                  Center(child: Text('Contenu de la recherche')),
+                  Center(child: Text('Contenu du profil')),
+                ],
               ),
-            ),
-            body: const TabBarView(
-              children: [
-                PostsPage(),
-                Center(child: Text('Contenu de la recherche')),
-                Center(child: Text('Contenu du profil')),
-              ],
-            ),
-          ),
-        ));
+            )
+        )));
   }
 }
