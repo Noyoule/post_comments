@@ -43,6 +43,7 @@ dependencies:
   flutter_bloc: ^8.1.5
   gap: ^3.0.1
   flutter_keyboard_visibility: ^6.0.0
+  floating_action_bubble_custom: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:
