@@ -9,10 +9,13 @@ import 'package:floating_action_bubble_custom/floating_action_bubble_custom.dart
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:post_comments/components/add/change_font.dart';
+import 'package:post_comments/components/custom_font.dart';
 import 'package:post_comments/components/add/change_color.dart';
 import 'package:post_comments/components/add/create_post_preview_image_logic.dart';
 import 'package:post_comments/components/add/showOnImage.dart';
 import 'package:post_comments/cubit/add/color_cubit.dart';
+import 'package:post_comments/cubit/add/font_cubit.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({super.key});
@@ -27,6 +30,7 @@ class _CreatePostState extends State<CreatePost>
   late Animation<double> _animation;
   late AnimationController _animationController;
   late bool isClosed;
+  late TextEditingController _controller;
 
   @override
   void initState() {
@@ -34,7 +38,10 @@ class _CreatePostState extends State<CreatePost>
     isClosed = true;
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 260),
+      duration: const Duration(milliseconds: 260),
+    );
+    _controller = TextEditingController(
+      text: "",
     );
     final curvedAnimation = CurvedAnimation(
       curve: Curves.easeInOut,
@@ -71,7 +78,9 @@ class _CreatePostState extends State<CreatePost>
         _imageTable = temporaryTable;
       });
     } on PlatformException catch (e) {
-      print("Error: $e");
+      if (kDebugMode) {
+        print("Error: $e");
+      }
     }
   }
 
@@ -148,36 +157,44 @@ class _CreatePostState extends State<CreatePost>
                 ),
                 const Gap(10),
                 _imageTable.isEmpty
-                    ? BlocBuilder<ColorCubit, int>(builder: (context, state) {
-                        return Container(
-                          height: 300,
-                          color: Color(state),
-                          child: TextField(
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            expands: true,
-                            textAlign: TextAlign.center,
-                            textAlignVertical: TextAlignVertical.center,
-                            style: TextStyle(
-                                color: inverseColor(Color(state)),
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500),
-                            cursorColor: inverseColor(Color(state)),
-                            cursorHeight: 35,
-                            cursorWidth: 3,
-                            decoration: InputDecoration(
-                              hintText: 'Start typing...',
-                              hintStyle:
-                                  TextStyle(color: inverseColor(Color(state))),
+                    ? BlocBuilder<ColorCubit, int>(
+                        builder: (context, colorState) {
+                        return BlocBuilder<FontCubit, String>(
+                            builder: (BuildContext context, fontState) {
+                          return Container(
+                            height: 300,
+                            color: Color(colorState),
+                            child: TextField(
+                              controller: _controller,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              expands: true,
+                              textAlign: TextAlign.center,
+                              textAlignVertical: TextAlignVertical.center,
+                              style: CustomFont.getFont(
+                                  font: fontState,
+                                  color: inverseColor(Color(colorState)),
+                                  size: 20),
+                              cursorColor: inverseColor(Color(colorState)),
+                              cursorHeight: 35,
+                              cursorWidth: 3,
+                              decoration: InputDecoration(
+                                hintText: 'Start typing...',
+                                hintStyle: CustomFont.getFont(
+                                    font: fontState,
+                                    color: inverseColor(Color(colorState)),
+                                    size: 20),
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        });
                       })
                     : Container(
                         padding: const EdgeInsets.all(5),
                         child: Column(
                           children: [
                             TextFormField(
+                              controller: _controller,
                               maxLines: 2,
                               decoration: const InputDecoration(
                                   border: InputBorder.none,
@@ -287,19 +304,28 @@ class _CreatePostState extends State<CreatePost>
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
-                                          width: 45,
-                                          height: 45,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          child: const Center(
-                                            child: Icon(
-                                              Icons.font_download_outlined,
-                                              size: 30,
-                                              color: Colors.white,
+                                        InkWell(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                                context: context,
+                                                builder: (context) {
+                                                  return const ChangeFont();
+                                                });
+                                          },
+                                          child: Container(
+                                            width: 45,
+                                            height: 45,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                            child: const Center(
+                                              child: Icon(
+                                                Icons.font_download_outlined,
+                                                size: 30,
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -416,7 +442,7 @@ class _CreatePostState extends State<CreatePost>
                     iconColor: Colors.white,
                     bubbleColor: Theme.of(context).primaryColor,
                     icon: Icons.image_outlined,
-                    style: TextStyle(fontSize: 10, color: Colors.white),
+                    style: const TextStyle(fontSize: 10, color: Colors.white),
                     onPressed: () {
                       _animationController.reverse();
                       getImageFromGallery();
@@ -431,7 +457,7 @@ class _CreatePostState extends State<CreatePost>
                     iconColor: Colors.white,
                     bubbleColor: Theme.of(context).primaryColor,
                     icon: Icons.camera_alt_outlined,
-                    style: TextStyle(fontSize: 10, color: Colors.white),
+                    style: const TextStyle(fontSize: 10, color: Colors.white),
                     onPressed: () {
                       _animationController.reverse();
                       getImageFromCamera();
